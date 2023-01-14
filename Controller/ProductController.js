@@ -1,4 +1,5 @@
 const { ProductModel, CateModel, PromotionModel } = require("../Model");
+const { Op } = require("sequelize");
 
 const ProductController = {
   getProduct: async (req, res) => {
@@ -12,6 +13,26 @@ const ProductController = {
         });
         if (product) {
           res.status(200).json(product);
+        } else {
+          res.status(404).json("Not Found");
+        }
+      } catch (error) {
+        res.status(500).json(error);
+      }
+    } else if (req.query.name) {
+      try {
+        const product = await ProductModel.findAll({
+          where: {
+            product_Name: { [Op.like]: `%${req.query.name}%` },
+          },
+          include: [
+            { model: CateModel, attributes: ["cate_Name"] },
+            { model: PromotionModel, attributes: ["discount", "description"] },
+          ],
+        });
+        if (product) {
+          res.status(200).json(product);
+          console.log(123);
         } else {
           res.status(404).json("Not Found");
         }
