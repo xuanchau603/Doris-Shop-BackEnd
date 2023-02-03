@@ -4,12 +4,14 @@ const UserController = require("../Controller/UserController");
 const CateController = require("../Controller/CateController");
 const PromotionController = require("../Controller/PromotionController");
 const ProductController = require("../Controller/ProductController");
+const orderController = require("../Controller/OrderController");
 const middlewareController = require("../Controller/middlewareController");
 const roleRouter = express.Router();
 const authRouter = express.Router();
 const cateRouter = express.Router();
 const promoRouter = express.Router();
 const productRouter = express.Router();
+const orderRouter = express.Router();
 
 //Role
 roleRouter.get("/:id?", RoleController.getRole);
@@ -18,7 +20,7 @@ roleRouter.post("/create", RoleController.createRole);
 authRouter.get(
   "/:id?",
   middlewareController.verifyToken,
-  UserController.getUser
+  UserController.getUser,
 );
 //Create user
 authRouter.post("/create", UserController.createUser);
@@ -26,7 +28,7 @@ authRouter.post("/create", UserController.createUser);
 authRouter.delete(
   "/delete/:id",
   middlewareController.verifyToken,
-  UserController.deleteUser
+  UserController.deleteUser,
 );
 //Login user
 authRouter.post("/login", UserController.loginUser);
@@ -68,10 +70,23 @@ productRouter.get("/", ProductController.getProduct);
 productRouter.post("/create", ProductController.createProduct);
 
 //Update
-productRouter.put("/update", ProductController.updateProduct);
+productRouter.put("/update/", ProductController.updateProduct);
 
 //Detele
 productRouter.delete("/delete", ProductController.deleteProduct);
+
+//Order
+//Get
+orderRouter.get("/", orderController.getOrder);
+
+//Create
+orderRouter.post("/create", orderController.createOrder);
+
+//Update
+orderRouter.put("/update", orderController.updateOrder);
+
+//Detele
+orderRouter.delete("/delete", orderController.deleteOrder);
 
 module.exports = {
   roleRouter,
@@ -79,4 +94,5 @@ module.exports = {
   cateRouter,
   promoRouter,
   productRouter,
+  orderRouter,
 };

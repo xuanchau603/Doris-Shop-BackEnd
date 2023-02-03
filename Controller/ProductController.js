@@ -103,23 +103,24 @@ const ProductController = {
           product_Image: req.body.image,
           product_Quantity: req.body.quantity,
           cate_ID: req.body.cateID,
-          promotion_ID: req.body.promotionID,
+          promotion_ID:
+            req.body.promotionID === "0" ? null : req.body.promotionID,
         },
         {
           where: {
             product_ID: req.query.id,
           },
-        }
+        },
       );
       res.status(200).json(productUpdate);
     } catch (error) {
-      res.json(500).json(error);
+      res.status(500).json(error);
     }
   },
   deleteProduct: async (req, res) => {
     const result = await ProductModel.destroy({
       where: {
-        product_ID: req.query.id,
+        product_ID: req.params.id,
       },
     });
     res.status(200).json(result);

@@ -25,7 +25,7 @@ const RoleModel = db.define(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const UserModel = db.define(
@@ -78,7 +78,7 @@ const UserModel = db.define(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const CateModel = db.define(
@@ -105,7 +105,7 @@ const CateModel = db.define(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const PromotionModel = db.define(
@@ -130,7 +130,7 @@ const PromotionModel = db.define(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const ProductModel = db.define(
@@ -189,7 +189,90 @@ const ProductModel = db.define(
   },
   {
     timestamps: true,
-  }
+  },
+);
+
+const OrderModel = db.define(
+  "orders",
+  {
+    id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    full_Name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    note: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null,
+    },
+    status: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    payment_Type: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    total_Order: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+const OrderDetailModel = db.define(
+  "order_detail",
+  {
+    id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    order_Id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: OrderModel,
+        key: "id",
+      },
+    },
+    product_Id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: ProductModel,
+        key: "product_ID",
+      },
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+  },
+  {
+    timestamps: true,
+  },
 );
 
 RoleModel.hasMany(UserModel, { foreignKey: "role_ID" });
@@ -204,12 +287,22 @@ ProductModel.belongsTo(CateModel, { foreignKey: "cate_ID" });
 PromotionModel.hasMany(ProductModel, { foreignKey: "promotion_ID" });
 ProductModel.belongsTo(PromotionModel, { foreignKey: "promotion_ID" });
 
-const queryInterface = db.getQueryInterface();
-// queryInterface.changeColumn("products", "product_Description", {
-//   type: DataTypes.STRING,
-//   defaultValue: null,
-//   allowNull: true,
+//
+
+OrderModel.hasMany(OrderDetailModel, { foreignKey: "order_Id" });
+OrderDetailModel.belongsTo(OrderModel, { foreignKey: "order_Id" });
+
+//
+ProductModel.hasMany(OrderDetailModel, { foreignKey: "product_ID" });
+OrderDetailModel.belongsTo(ProductModel, { foreignKey: "product_ID" });
+
+// const queryInterface = db.getQueryInterface();
+// queryInterface.changeColumn("orders", "payment_Type", {
+//   type: DataTypes.INTEGER,
+//   allowNull: false,
+//   defaultValue: 0,
 // });
+
 db.sync();
 
 module.exports = {
@@ -218,4 +311,6 @@ module.exports = {
   CateModel,
   ProductModel,
   PromotionModel,
+  OrderModel,
+  OrderDetailModel,
 };

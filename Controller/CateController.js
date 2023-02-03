@@ -1,4 +1,4 @@
-const { CateModel } = require("../Model");
+const { CateModel, ProductModel } = require("../Model");
 
 const CateController = {
   getCate: async (req, res) => {
@@ -27,6 +27,12 @@ const CateController = {
     try {
       const listCate = await CateModel.findAll({
         attributes: ["cate_ID", "cate_Name"],
+        include: [
+          {
+            model: ProductModel,
+            attributes: ["product_Name"],
+          },
+        ],
       });
       res.status(200).json(listCate);
     } catch (error) {
@@ -75,11 +81,11 @@ const CateController = {
           where: {
             cate_ID: req.params.id,
           },
-        }
+        },
       );
       res.status(200).json(cateUpdate);
     } catch (error) {
-      res.json(500).json(error);
+      res.status(500).json(error);
     }
   },
   deleteCate: async (req, res) => {

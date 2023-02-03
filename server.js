@@ -7,6 +7,7 @@ const {
   cateRouter,
   promoRouter,
   productRouter,
+  orderRouter,
 } = require("./Routes");
 
 const app = express();
@@ -30,6 +31,9 @@ app.use("/promotion", promoRouter);
 
 //ROUTER product
 app.use("/product", productRouter);
+
+//ROUTER order
+app.use("/order", orderRouter);
 
 app.listen(3001, () => {
   console.log(`Example app listening on port ${3001}`);
