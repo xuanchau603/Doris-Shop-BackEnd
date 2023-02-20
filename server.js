@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const path = require("path");
 const Cors = require("cors");
 const {
   roleRouter,
@@ -11,6 +12,9 @@ const {
 } = require("./Routes");
 
 const app = express();
+
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use(Cors());
 app.use(express.json());
 

@@ -4,9 +4,7 @@ const db = new Sequelize("db_shopmypham", "root", "", {
   host: "localhost",
   dialect: "mysql",
   logging: true,
-  dialectOptions: {
-    useUTC: false, // for reading from database
-  },
+
   timezone: "+07:00", // for writing to database
 });
 

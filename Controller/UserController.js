@@ -66,7 +66,7 @@ const UserController = {
           role_ID: data.role_ID,
           email: data.email,
           password: hashed,
-          fullName: data.fullName,
+          full_Name: data.fullName,
           city: data.city,
           district: data.district,
           avatar: data.avatar,
@@ -81,15 +81,14 @@ const UserController = {
     try {
       const user = await UserModel.findOne({
         where: { email: req.body.email },
-        include: { model: RoleModel },
+        include: { model: RoleModel, attributes: ["role_Name"] },
       });
-      if (!user) {
-        return res.status(404).json("User is not exist");
-      }
+
       const validPassword = await bcrypt.compare(
         req.body.password,
-        user.password
+        user.password,
       );
+
       if (!validPassword) {
         return res.status(404).json("Invalid password");
       }
@@ -104,15 +103,27 @@ const UserController = {
           "123456",
           {
             expiresIn: "3d",
-          }
+          },
         );
+        res.cookie("token", accesstoken, {
+          httpOnly: true,
+          secure: false,
+          path: "/",
+          sameSite: "strict",
+        });
+
+        const { password, ...other } = user.dataValues;
 
         res.send({
           message: "Login successfully",
-          data: user,
+          data: other,
           accesstoken,
         });
       }
+
+      // if (!user) {
+      //   return res.status(404).json("User is not exist");
+      // }
     } catch (error) {
       res.status(500).json(error);
     }
