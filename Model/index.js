@@ -63,11 +63,7 @@ const UserModel = db.define(
       type: DataTypes.STRING,
       defaultValue: "",
     },
-    city: {
-      type: DataTypes.STRING,
-      defaultValue: "",
-    },
-    district: {
+    address: {
       type: DataTypes.STRING,
       defaultValue: "",
     },
@@ -256,7 +252,7 @@ const OrderDetailModel = db.define(
         key: "id",
       },
     },
-    product_Id: {
+    product_ID: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
@@ -297,11 +293,7 @@ ProductModel.hasMany(OrderDetailModel, { foreignKey: "product_ID" });
 OrderDetailModel.belongsTo(ProductModel, { foreignKey: "product_ID" });
 
 // const queryInterface = db.getQueryInterface();
-// queryInterface.changeColumn("orders", "payment_Type", {
-//   type: DataTypes.INTEGER,
-//   allowNull: false,
-//   defaultValue: 0,
-// });
+// queryInterface.removeColumn("users", "city");
 
 db.sync();
 

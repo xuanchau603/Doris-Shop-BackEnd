@@ -18,6 +18,7 @@ const middlewareController = {
       jwt.verify(token, "123456", (err, user) => {
         if (err) return res.status(403).json("Token is invalid");
         req.user = user;
+        console.log(user);
         next();
       });
     } else {

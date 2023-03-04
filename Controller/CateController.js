@@ -30,7 +30,7 @@ const CateController = {
         include: [
           {
             model: ProductModel,
-            attributes: ["product_Name"],
+            attributes: ["product_ID", "product_Name"],
           },
         ],
       });

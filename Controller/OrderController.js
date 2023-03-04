@@ -40,9 +40,22 @@ const orderController = {
       } catch (error) {
         res.status(500).json(error);
       }
+    } else if (req.query.phone) {
+      try {
+        const order = await OrderModel.findAll({
+          where: { phone: req.query.phone },
+        });
+        if (order.length > 0) {
+          res.status(200).json(order);
+        } else {
+          res.status(404).json("Not Found");
+        }
+      } catch (error) {
+        res.status(500).json(error);
+      }
     } else {
       try {
-        const orders = await OrderModel.findAll();
+        const orders = await OrderModel.findAll({});
         if (orders) {
           res.status(200).json(orders);
         } else {
@@ -54,33 +67,6 @@ const orderController = {
     }
   },
 
-  //     if (req.query.order_Id) {
-  //       try {
-  //         const orderDetail = await OrderDetailModel.findAll({
-  //           where: { order_Id: req.query.order_Id },
-  //           include: [{ model: OrderModel }, { model: ProductModel }],
-  //         });
-  //         if (orderDetail) {
-  //           res.status(200).json(orderDetail);
-  //         } else {
-  //           res.status(404).json("Not Found");
-  //         }
-  //       } catch (error) {
-  //         res.status(500).json(error);
-  //       }
-  //     } else {
-  //       try {
-  //         const orders = await OrderDetailModel.findAll();
-  //         if (orders) {
-  //           res.status(200).json(orders);
-  //         } else {
-  //           res.status(404).json("Not Found");
-  //         }
-  //       } catch (error) {
-  //         res.status(500).json(error);
-  //       }
-  //     }
-  //   },
   createOrder: async (req, res, next) => {
     try {
       const newOrder = await OrderModel.create({
@@ -96,12 +82,11 @@ const orderController = {
         for (let i = 0; i < req.body.product.length; ++i) {
           const a = await OrderDetailModel.create({
             order_Id: newOrder.id,
-            product_Id: req.body.product[i].id,
+            product_ID: req.body.product[i].id,
             quantity: req.body.product[i].quantity || 0,
           });
         }
       }
-
       res.status(200).json(newOrder);
     } catch (error) {
       res.status(500).json(error);
@@ -164,6 +149,12 @@ const orderController = {
     } catch (error) {
       res.status(500).json(error);
     }
+  },
+  orderMomo: async (req, res, next) => {
+    //https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method
+    //parameters
+    res.redirect("http://localhost:3000/lookup");
+    // res.json(123);
   },
 };
 

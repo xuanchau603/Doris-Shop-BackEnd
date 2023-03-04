@@ -17,19 +17,13 @@ const orderRouter = express.Router();
 roleRouter.get("/:id?", RoleController.getRole);
 roleRouter.post("/create", RoleController.createRole);
 // Get User
-authRouter.get(
-  "/:id?",
-  middlewareController.verifyToken,
-  UserController.getUser,
-);
+authRouter.get("/:id?", UserController.getUser);
 //Create user
 authRouter.post("/create", UserController.createUser);
+//Update user
+authRouter.put("/edit", UserController.editUser);
 //Delete user
-authRouter.delete(
-  "/delete/:id",
-  middlewareController.verifyToken,
-  UserController.deleteUser,
-);
+authRouter.delete("/delete/:id", UserController.deleteUser);
 //Login user
 authRouter.post("/login", UserController.loginUser);
 
@@ -81,6 +75,7 @@ orderRouter.get("/", orderController.getOrder);
 
 //Create
 orderRouter.post("/create", orderController.createOrder);
+orderRouter.post("/momo", orderController.orderMomo);
 
 //Update
 orderRouter.put("/update", orderController.updateOrder);

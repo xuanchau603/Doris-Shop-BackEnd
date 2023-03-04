@@ -39,7 +39,28 @@ const ProductController = {
       } catch (error) {
         res.status(500).json(error);
       }
-    } else {
+    }else if(req.query.sort){
+      if(req.query.sort === "desc"){
+        const products = await ProductModel.findAll({
+          order: [["product_Price", "DESC"]],
+          include: [
+            { model: CateModel, attributes: ["cate_Name"] },
+            { model: PromotionModel, attributes: ["discount", "description"] },
+          ],
+        })
+        res.status(200).json(products)
+      }else{
+        const products = await ProductModel.findAll({
+          order: [["product_Price", "ASC"]],
+          include: [
+            { model: CateModel, attributes: ["cate_Name"] },
+            { model: PromotionModel, attributes: ["discount", "description"] },
+          ],
+        })
+        res.status(200).json(products)
+      }
+    }
+    else {
       try {
         const listProduct = await ProductModel.findAll({
           include: [
